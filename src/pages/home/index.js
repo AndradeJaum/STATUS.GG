@@ -129,7 +129,7 @@ export function Home() {
     if (progress <= 100) {
       const timer = setInterval(() => {
         setProgress((oldProgress) => {
-          console.log(oldProgress);
+          
           if (oldProgress - 2 < 0) {
             return 101;
           }
