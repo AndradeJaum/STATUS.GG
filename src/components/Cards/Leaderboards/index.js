@@ -18,23 +18,23 @@ function Leaderboards() {
       <Box csx={{ display: "flex", justifyContent: "space-between" }}>
         <Box>
           <Typography sx={{ marginTop: "0.7rem", marginBottom: "0.7rem", display: "block" }}>
-           Caba 1
+           Player 1
           </Typography>
 
           <Typography sx={{ marginTop: "0.7rem", marginBottom: "0.7rem", display: "block" }}>
-           Caba 2
+           Player 2
           </Typography>
 
           <Typography sx={{ marginTop: "0.7rem", marginBottom: "0.7rem", display: "block" }}>
-            caba 3
+            Player 3
           </Typography>
 
           <Typography sx={{ marginTop: "0.7rem", marginBottom: "0.7rem", display: "block" }}>
-            caba 4
+            Player 4
           </Typography>
 
           <Typography sx={{ marginTop: "0.7rem", marginBottom: "0.7rem", display: "block" }}>
-            caba 5
+            Player 5
           </Typography>
         </Box>
       </Box>
