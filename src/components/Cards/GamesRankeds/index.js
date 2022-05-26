@@ -7,7 +7,7 @@ function Card({ queueStats, rankedType }) {
         backgroundColor: "#fafafa",
         width: "20%",
         marginTop: "1.5rem",
-        padding: "1.5rem",
+        padding: "1rem",
       }}
     >
       <Typography variant="h6" color="secondary" component="h2" align="center">
@@ -20,7 +20,7 @@ function Card({ queueStats, rankedType }) {
           </Typography>
 
           <Typography sx={{ marginTop: "0.7rem", marginBottom: "0.7rem", display: "block" }}>
-            Winrate: {queueStats.winrate}
+            Winrate: {queueStats.winrate}%
           </Typography>
 
           <Typography sx={{ marginTop: "0.7rem", marginBottom: "0.7rem", display: "block" }}>

@@ -1,24 +1,33 @@
 export async function searchByName(nickname, region) {
-    const response = await fetch(`http://localhost:8000/summoner/${nickname}?region=${region}`)
-    const summoner = await response.json();
-    return summoner
+  const response = await fetch(
+    `http://localhost:8000/summoner/${nickname}?region=${region}`
+  );
+  const summoner = await response.json();
+  return summoner;
 }
 
 export async function getMatchsByUserId(id) {
-    const response = await fetch(`http://localhost:8000/matchs/${id}`);
-    const matchs = await response.json();
-    return matchs
+  const response = await fetch(`http://localhost:8000/matchs/${id}`);
+  const matchs = await response.json();
+  return matchs;
 }
 
 export async function getMatch(id) {
-    const response = await fetch(`http://localhost:8000/match/${id}`);
-    const match = await response.json();
-    return match
+  const response = await fetch(`http://localhost:8000/match/${id}`);
+  const match = await response.json();
+  return match;
 }
 
 export async function getRankedMatchs(id) {
-    const response = await fetch(`http://localhost:8000/rankedMatchs/${id}`);
-    const rankedMatchs = await response.json();
+  const response = await fetch(`http://localhost:8000/rankedMatchs/${id}`);
+  const rankedMatchs = await response.json();
 
-    return rankedMatchs
+  return rankedMatchs;
+}
+
+export async function getLeaderboards() {
+  const response = await fetch(`http://localhost:8000`);
+  const leaderboards = await response.json();
+
+  return leaderboards;
 }

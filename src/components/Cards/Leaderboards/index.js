@@ -1,40 +1,44 @@
 import { Typography, Box } from "@mui/material";
 
-function Games({ lastGames }) {
+function Leaderboards() {
 
   return (
     <Box
       sx={{
         backgroundColor: "#fafafa",
-        width: "20%",
-        marginTop: "1.5rem",
+        width: "10%",
         padding: "1rem",
-      }}
+        textAlign: "center",
+        marginRight: "20px"
+    }}
     >
       <Typography variant="h6" color="secondary" component="h2" align="center">
-        ULTIMAS 20 PARTIDAS
+        Leaderboards
       </Typography>
       <Box csx={{ display: "flex", justifyContent: "space-between" }}>
         <Box>
           <Typography sx={{ marginTop: "0.7rem", marginBottom: "0.7rem", display: "block" }}>
-            Winrate: {lastGames.winrate}%
+           Caba 1
           </Typography>
 
           <Typography sx={{ marginTop: "0.7rem", marginBottom: "0.7rem", display: "block" }}>
-            Vitórias: {lastGames.wins}
+           Caba 2
           </Typography>
 
           <Typography sx={{ marginTop: "0.7rem", marginBottom: "0.7rem", display: "block" }}>
-            Derrotas: {lastGames.losses}
+            caba 3
           </Typography>
-        </Box>
-        <Box>
+
           <Typography sx={{ marginTop: "0.7rem", marginBottom: "0.7rem", display: "block" }}>
-            Gráfico aqui
+            caba 4
+          </Typography>
+
+          <Typography sx={{ marginTop: "0.7rem", marginBottom: "0.7rem", display: "block" }}>
+            caba 5
           </Typography>
         </Box>
       </Box>
     </Box>
   );
 }
-export default Games;
+export default Leaderboards;

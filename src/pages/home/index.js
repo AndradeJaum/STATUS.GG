@@ -1,10 +1,26 @@
 import { useState, useEffect } from "react";
-import { searchByName, getMatchsByUserId, getRankedMatchs, getMatch } from "../../lib/api";
-import { Box, Button, Select, TextField, Typography, MenuItem, LinearProgress } from "@mui/material";
+import {
+  searchByName,
+  getMatchsByUserId,
+  getRankedMatchs,
+  getMatch,
+} from "../../lib/api";
+import {
+  Box,
+  Button,
+  Select,
+  TextField,
+  Typography,
+  MenuItem,
+  LinearProgress,
+} from "@mui/material";
 import SimpleBackdrop from "../../components/Backdrop";
 import Games from "../../components/Cards/Games";
 import Card from "../../components/Cards/GamesRankeds";
+import Leaderboards from "../../components/Cards/Leaderboards";
 import { regioes } from "../../enum";
+import { useCooldown } from "../../hooks/useCooldown";
+import { color } from "@mui/system";
 
 export function Home() {
   const [summonerName, setSummonerName] = useState("");
@@ -16,7 +32,8 @@ export function Home() {
   const [nickname, setNickname] = useState("");
   const [error, setError] = useState({ nickname: false });
   const [loader, setLoader] = useState(false);
-  const [progress, setProgress] = useState(101);
+
+  const [progress, setProgress, saveLocalStorage] = useCooldown();
 
   async function data() {
     const summoner = await searchByName(nickname, region);
@@ -116,6 +133,7 @@ export function Home() {
     resetStats();
     setLoader(true);
     setProgress(100);
+    saveLocalStorage();
     data();
   };
 
@@ -124,25 +142,6 @@ export function Home() {
       setLoader(false);
     }
   }, [last20Games]);
-
-  useEffect(() => {
-    if (progress <= 100) {
-      const timer = setInterval(() => {
-        setProgress((oldProgress) => {
-          
-          if (oldProgress - 2 < 0) {
-            return 101;
-          }
-          const diff = 2;
-          return Math.max(oldProgress - diff, 0);
-        });
-      }, 1000);
-      return () => {
-        clearInterval(timer);
-      };
-    }
-  }, [progress]);
-
 
   return (
     <div>
@@ -168,77 +167,93 @@ export function Home() {
 
         <Box
           sx={{
-            backgroundColor: "#fafafa",
-            width: "30%",
-            padding: "1.5rem",
-            margin: "auto",
+            width: "100vw",
+            display: "flex",
+            justifyContent: "space-between",
+            
           }}
         >
-          <Typography
-            variant="h6"
-            color="secondary"
-            component="h2"
-            align="center"
+          <Box
+            sx={{
+              width: "10%",
+              marginLeft: "20px"
+            }}
+          ></Box>
+
+          <Box
+            sx={{
+              backgroundColor: "#fafafa",
+              width: "30%",
+              padding: "1rem",
+            }}
           >
-            INSIRA O NOME DE INVOCADOR!
-          </Typography>
-          <form autoComplete="off" onSubmit={handleSubmit}>
-            <TextField
-              onChange={(event) => setNickname(event.target.value)}
-              sx={{
-                marginTop: "1.5rem",
-                marginBottom: "1.5rem",
-                display: "block",
-              }}
-              name="nickname"
-              label="Invocador"
-              variant="outlined"
+            <Typography
+              variant="h6"
               color="secondary"
-              value={nickname}
-              error={error.nickname}
-              onBlur={(event) => validate(event.target)}
-              required
-              fullWidth
-            />
-
-            <Select
-              label="Região"
-              sx={{
-                marginTop: "1.5rem",
-                marginBottom: "1.5rem",
-                display: "block",
-              }}
-              value={region}
-              onChange={(event) => setRegions(event.target.value)}
-              variant="outlined"
-              color="secondary"
-              fullWidth
+              component="h2"
+              align="center"
             >
-              {regioes.map((option) => (
-                <MenuItem key={option.value} value={option.value}>
-                  {option.label}
-                </MenuItem>
-              ))}
-            </Select>
-            <Button
-              disabled={progress < 100}
-              className="search"
-              type="submit"
-              variant="contained"
-              color="secondary"
-              fullWidth
-            >
-              Pesquisar
-            </Button>
-
-            {progress <= 100 && (
-              <LinearProgress
+              INSIRA O NOME DE INVOCADOR!
+            </Typography>
+            <form autoComplete="off" onSubmit={handleSubmit}>
+              <TextField
+                onChange={(event) => setNickname(event.target.value)}
+                sx={{
+                  marginTop: "1.5rem",
+                  marginBottom: "1.5rem",
+                  display: "block",
+                }}
+                name="nickname"
+                label="Invocador"
+                variant="outlined"
                 color="secondary"
-                variant="determinate"
-                value={progress}
+                value={nickname}
+                error={error.nickname}
+                onBlur={(event) => validate(event.target)}
+                required
+                fullWidth
               />
-            )}
-          </form>
+
+              <Select
+                label="Região"
+                sx={{
+                  marginTop: "1.5rem",
+                  marginBottom: "1.5rem",
+                  display: "block",
+                }}
+                value={region}
+                onChange={(event) => setRegions(event.target.value)}
+                variant="outlined"
+                color="secondary"
+                fullWidth
+              >
+                {regioes.map((option) => (
+                  <MenuItem key={option.value} value={option.value}>
+                    {option.label}
+                  </MenuItem>
+                ))}
+              </Select>
+              <Button
+                disabled={progress < 100}
+                className="search"
+                type="submit"
+                variant="contained"
+                color="secondary"
+                fullWidth
+              >
+                Pesquisar
+              </Button>
+
+              {progress <= 100 && (
+                <LinearProgress
+                  color="secondary"
+                  variant="determinate"
+                  value={progress}
+                />
+              )}
+            </form>
+          </Box>
+          <Leaderboards />
         </Box>
         {last20Games.winrate && (
           <Box sx={{ display: "flex", justifyContent: "space-around" }}>
