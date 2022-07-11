@@ -25,8 +25,16 @@ export async function getRankedMatchs(id) {
   return rankedMatchs;
 }
 
-export async function getLeaderboards() {
-  const response = await fetch(`http://localhost:8000`);
+export async function postLeaderboards({body}) {
+  const response = await fetch(`http://localhost:8000/leaderboards`, {
+    method: "POST",
+    mode: "no-cors",
+    headers: {
+      "Access-Control-Allow-Origin": "*",
+      "Content-Type": "application/json",
+    },
+    body
+  });
   const leaderboards = await response.json();
 
   return leaderboards;

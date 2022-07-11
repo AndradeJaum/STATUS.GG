@@ -4,6 +4,7 @@ import {
   getMatchsByUserId,
   getRankedMatchs,
   getMatch,
+  postLeaderboards,
 } from "../../lib/api";
 import {
   Box,
@@ -20,7 +21,6 @@ import Card from "../../components/Cards/GamesRankeds";
 import Leaderboards from "../../components/Cards/Leaderboards";
 import { regioes } from "../../enum";
 import { useCooldown } from "../../hooks/useCooldown";
-import { color } from "@mui/system";
 
 export function Home() {
   const [summonerName, setSummonerName] = useState("");
@@ -39,9 +39,16 @@ export function Home() {
     const summoner = await searchByName(nickname, region);
     const matchsIds = await getMatchsByUserId(summoner.puuid);
     const rankedMatchs = await getRankedMatchs(summoner.id);
+    const leaderboards = await postLeaderboards({
+      summoner,
+      rankedSolo,
+      rankedFlex,
+    });
     setSummonerName(summoner.name);
     setId(summoner.id);
+    console.log(summoner)
 
+  
     async function rank() {
       const rankedSolo = rankedMatchs.find(
         (i) => i.queueType === "RANKED_SOLO_5x5"
@@ -170,13 +177,12 @@ export function Home() {
             width: "100vw",
             display: "flex",
             justifyContent: "space-between",
-            
           }}
         >
           <Box
             sx={{
               width: "10%",
-              marginLeft: "20px"
+              marginLeft: "20px",
             }}
           ></Box>
 
