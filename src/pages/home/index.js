@@ -40,14 +40,12 @@ export function Home() {
     const matchsIds = await getMatchsByUserId(summoner.puuid);
     const rankedMatchs = await getRankedMatchs(summoner.id);
     const leaderboards = await postLeaderboards({
+      nickname,
       summoner,
-      rankedSolo,
-      rankedFlex,
+      rankedMatchs
     });
     setSummonerName(summoner.name);
     setId(summoner.id);
-    console.log(summoner)
-
   
     async function rank() {
       const rankedSolo = rankedMatchs.find(
@@ -264,8 +262,8 @@ export function Home() {
         {last20Games.winrate && (
           <Box sx={{ display: "flex", justifyContent: "space-around" }}>
             <Games lastGames={last20Games} />
-            <Card queueStats={rankedSolo} rankedType="RANQUEADA SOLO/DUO" />
-            <Card queueStats={rankedFlex} rankedType="RANQUEADA FLEX" />
+            <Card queueStats={rankedSolo} rankedType="RANKED SOLO" />
+            <Card queueStats={rankedFlex} rankedType="RANKED FLEX" />
           </Box>
         )}
       </Box>

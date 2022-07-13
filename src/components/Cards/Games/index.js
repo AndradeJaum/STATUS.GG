@@ -28,11 +28,6 @@ function Games({ lastGames }) {
             Derrotas: {lastGames.losses}
           </Typography>
         </Box>
-        <Box>
-          <Typography sx={{ marginTop: "0.7rem", marginBottom: "0.7rem", display: "block" }}>
-            Gráfico aqui
-          </Typography>
-        </Box>
       </Box>
     </Box>
   );
