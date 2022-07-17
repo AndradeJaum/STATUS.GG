@@ -39,14 +39,9 @@ export function Home() {
     const summoner = await searchByName(nickname, region);
     const matchsIds = await getMatchsByUserId(summoner.puuid);
     const rankedMatchs = await getRankedMatchs(summoner.id);
-    const leaderboards = await postLeaderboards({
-      nickname,
-      summoner,
-      rankedMatchs
-    });
     setSummonerName(summoner.name);
     setId(summoner.id);
-  
+
     async function rank() {
       const rankedSolo = rankedMatchs.find(
         (i) => i.queueType === "RANKED_SOLO_5x5"
@@ -80,12 +75,20 @@ export function Home() {
         solo.matchsAmount = solo.wins + solo.losses;
         flex.matchsAmount = flex.wins + flex.losses;
 
-        solo.winrate = ((solo.wins * 100) / solo.matchsAmount).toFixed();
+        solo.winrate =
+          solo.matchsAmount > 0
+            ? ((solo.wins * 100) / solo.matchsAmount).toFixed()
+            : "";
         flex.winrate = ((flex.wins * 100) / flex.matchsAmount).toFixed();
 
         setRankedSolo(solo);
         setRankedFlex(flex);
       }
+      const leaderboards = await postLeaderboards({
+        summoner,
+        solo,
+        flex,
+      });
     }
     rank();
 
@@ -257,7 +260,7 @@ export function Home() {
               )}
             </form>
           </Box>
-          <Leaderboards />
+          <Leaderboards summoner={summonerName} />
         </Box>
         {last20Games.winrate && (
           <Box sx={{ display: "flex", justifyContent: "space-around" }}>

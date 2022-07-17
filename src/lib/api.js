@@ -31,8 +31,20 @@ export async function postLeaderboards(body) {
     headers: {
       "Content-Type": "application/json",
     },
-    body: JSON.stringify(body)
+    body: JSON.stringify(body),
   });
+}
+
+export async function getLeaderboards(limit, leaderboardType) {
+  const response = await fetch(
+    `http://localhost:8000/leaderboards?limit=${limit}&leaderboardType=${leaderboardType}`,
+    {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+      },
+    }
+  );
   const leaderboards = await response.json();
 
   return leaderboards;
