@@ -2,7 +2,6 @@ import { useState, useEffect } from "react";
 import {
   searchByName,
   getMatchsByUserId,
-  getRankedMatchs,
   getMatch,
   postLeaderboards,
 } from "../../lib/api";
@@ -14,6 +13,8 @@ import {
   Typography,
   MenuItem,
   LinearProgress,
+  Snackbar,
+  Alert
 } from "@mui/material";
 import SimpleBackdrop from "../../components/Backdrop";
 import Games from "../../components/Cards/Games";
@@ -24,98 +25,60 @@ import { useCooldown } from "../../hooks/useCooldown";
 
 export function Home() {
   const [summonerName, setSummonerName] = useState("");
-  const [id, setId] = useState("");
   const [region, setRegions] = useState("");
   const [last20Games, setLast20Games] = useState({});
   const [rankedSolo, setRankedSolo] = useState({});
   const [rankedFlex, setRankedFlex] = useState({});
   const [nickname, setNickname] = useState("");
   const [error, setError] = useState({ nickname: false });
+  const [apiError, setApiError] = useState(false)
   const [loader, setLoader] = useState(false);
 
   const [progress, setProgress, saveLocalStorage] = useCooldown();
 
   async function data() {
-    const summoner = await searchByName(nickname, region);
-    const matchsIds = await getMatchsByUserId(summoner.puuid);
-    const rankedMatchs = await getRankedMatchs(summoner.id);
-    setSummonerName(summoner.name);
-    setId(summoner.id);
+    try {
+      const summoner = await searchByName(nickname, region);
+      const matchsIds = await getMatchsByUserId(summoner.puuid);
+      setSummonerName(summoner.name);
+      setRankedSolo(summoner["RANKED_SOLO_5x5"])
+      setRankedFlex(summoner["RANKED_FLEX_SR"])
 
-    async function rank() {
-      const rankedSolo = rankedMatchs.find(
-        (i) => i.queueType === "RANKED_SOLO_5x5"
-      );
-      const rankedFlex = rankedMatchs.find(
-        (i) => i.queueType === "RANKED_FLEX_SR"
-      );
-
-      const solo = {
-        winrate: "",
-        wins: "",
-        losses: "",
-        matchsAmount: "",
-      };
-      const flex = {
-        winrate: "",
-        wins: "",
-        losses: "",
-        matchsAmount: "",
-      };
-
-      if (rankedMatchs) {
-        if (rankedSolo) {
-          solo.wins = rankedSolo.wins;
-          solo.losses = rankedSolo.losses;
-        }
-        if (rankedFlex) {
-          flex.wins = rankedFlex.wins;
-          flex.losses = rankedFlex.losses;
-        }
-        solo.matchsAmount = solo.wins + solo.losses;
-        flex.matchsAmount = flex.wins + flex.losses;
-
-        solo.winrate =
-          solo.matchsAmount > 0
-            ? ((solo.wins * 100) / solo.matchsAmount).toFixed()
-            : "";
-        flex.winrate = ((flex.wins * 100) / flex.matchsAmount).toFixed();
-
-        setRankedSolo(solo);
-        setRankedFlex(flex);
-      }
-      const leaderboards = await postLeaderboards({
-        summoner,
-        solo,
-        flex,
+      await postLeaderboards({
+        summonerName: summoner.name,
+        solo: summoner["RANKED_SOLO_5x5"],
+        flex: summoner["RANKED_FLEX_SR"],
       });
-    }
-    rank();
 
-    const games = {
-      winrate: "",
-      wins: "",
-      losses: "",
-    };
+      const games = {
+        winrate: "",
+        wins: "",
+        losses: "",
+      };
 
-    let loses = 0;
-    let wins = 0;
+      let loses = 0;
+      let wins = 0;
 
-    await Promise.all(
-      matchsIds.map(async (matchId) => {
-        let match = await getMatch(matchId);
-        const participants = match.info.participants;
-        for (let i = 0; i < participants.length; i++) {
-          if (participants[i].summonerName === summoner.name) {
-            participants[i].win ? wins++ : loses++;
+      await Promise.all(
+        matchsIds.map(async (matchId) => {
+          let match = await getMatch(matchId);
+          const participants = match.info.participants;
+          for (let i = 0; i < participants.length; i++) {
+            if (participants[i].summonerName === summoner.name) {
+              participants[i].win ? wins++ : loses++;
+            }
           }
-        }
-      })
-    );
-    games.wins = wins;
-    games.losses = loses;
-    games.winrate = (games.wins * 100) / matchsIds.length;
-    setLast20Games(games);
+        })
+      );
+      games.wins = wins;
+      games.losses = loses;
+      games.winrate = (games.wins * 100) / matchsIds.length;
+      setLast20Games(games);
+    } catch (error) {
+      resetStats();
+      setLoader(false);
+      setApiError(true)
+    }
   }
 
   function validate(input) {
@@ -130,10 +93,21 @@ export function Home() {
     }
   }
 
+  console.log(rankedFlex)
+  console.log(rankedSolo)
+
   function resetStats() {
     setLast20Games({});
     setRankedSolo({});
     setRankedFlex({});
+  }
+
+  function handleSnackBar(event, reason) {
+    if (reason === 'clickaway') {
+      return;
+    }
+
+    setApiError(false);
   }
 
   const handleSubmit = (event) => {
@@ -152,7 +126,7 @@ export function Home() {
   }, [last20Games]);
 
   return (
-    <div>
+    <>
       <Box sx={{ backgroundColor: "#34495e", height: "100vh" }}>
         <Box
           sx={{
@@ -265,12 +239,21 @@ export function Home() {
         {last20Games.winrate && (
           <Box sx={{ display: "flex", justifyContent: "space-around" }}>
             <Games lastGames={last20Games} />
-            <Card queueStats={rankedSolo} rankedType="RANKED SOLO" />
-            <Card queueStats={rankedFlex} rankedType="RANKED FLEX" />
+            <Card queueStats={rankedSolo} rankedType="RANKED SOLO" elo={{ rank: rankedSolo.rank, tier: rankedSolo.tier }} />
+            <Card queueStats={rankedFlex} rankedType="RANKED FLEX" elo={{ rank: rankedFlex.rank, tier: rankedFlex.tier }} />
           </Box>
         )}
       </Box>
-    </div>
+      <Snackbar
+        open={apiError}
+        autoHideDuration={4000}
+        onClose={handleSnackBar}
+      >
+        <Alert onClose={handleSnackBar} severity="error" sx={{ width: '100%' }}>
+          "Internal Error"
+        </Alert>
+      </Snackbar>
+    </>
   );
 }
 export default Home;

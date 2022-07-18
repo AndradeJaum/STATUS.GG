@@ -10,20 +10,21 @@ import { useState, useEffect } from "react";
 function Leaderboards({ summoner }) {
   const [leaderboards, setLeaderboards] = useState([]);
   const [limit, setLimit] = useState(5);
-  const [leaderboardType, setLeaderboardType] = useState("rankedSolo");
+  const [rankedType, setRankedType] = useState("rankedSolo");
 
   async function fetchLeaderboards() {
-    const leaderboardsData = await getLeaderboards(limit, leaderboardType);
-    console.log(leaderboardsData);
+    const leaderboardsData = await getLeaderboards(limit, rankedType);
     setLeaderboards(leaderboardsData);
   }
 
   useEffect(() => {
-    fetchLeaderboards();
-  }, [leaderboardType, summoner]);
+    if (rankedType) {
+      fetchLeaderboards();
+    }
+  }, [rankedType, summoner]);
 
-  const handleChange = (event, rankedType) => {
-    setLeaderboardType(rankedType);
+  const handleChange = (event, rankedTypeInput) => {
+    setRankedType(rankedTypeInput);
   };
 
   return (
@@ -42,7 +43,7 @@ function Leaderboards({ summoner }) {
 
       <ToggleButtonGroup
         color="secondary"
-        value={leaderboardType}
+        value={rankedType}
         exclusive
         onChange={handleChange}
       >
@@ -58,7 +59,6 @@ function Leaderboards({ summoner }) {
         <Box>
           {leaderboards.length > 0 &&
             leaderboards.map((leaderboard, i) => {
-              const queue = leaderboard[leaderboardType];
               const name = leaderboard.summonerName;
 
               return (
@@ -70,7 +70,7 @@ function Leaderboards({ summoner }) {
                     display: "block",
                   }}
                 >
-                  {i + 1} - {name} : {queue.winrate}%
+                  {i + 1} - {name} : {leaderboard.stats.winrate}%
                 </Typography>
               );
             })}

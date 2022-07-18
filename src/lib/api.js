@@ -6,8 +6,8 @@ export async function searchByName(nickname, region) {
   return summoner;
 }
 
-export async function getMatchsByUserId(id) {
-  const response = await fetch(`http://localhost:8000/matchs/${id}`);
+export async function getMatchsByUserId(puuid) {
+  const response = await fetch(`http://localhost:8000/matchs/${puuid}`);
   const matchs = await response.json();
   return matchs;
 }
@@ -18,15 +18,15 @@ export async function getMatch(id) {
   return match;
 }
 
-export async function getRankedMatchs(id) {
-  const response = await fetch(`http://localhost:8000/rankedMatchs/${id}`);
+export async function getRankedMatchs(userId) {
+  const response = await fetch(`http://localhost:8000/rankedMatchs/${userId}`);
   const rankedMatchs = await response.json();
 
   return rankedMatchs;
 }
 
 export async function postLeaderboards(body) {
-  const response = await fetch(`http://localhost:8000/leaderboards`, {
+  await fetch(`http://localhost:8000/leaderboards`, {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
@@ -35,9 +35,9 @@ export async function postLeaderboards(body) {
   });
 }
 
-export async function getLeaderboards(limit, leaderboardType) {
+export async function getLeaderboards(limit, rankedType) {
   const response = await fetch(
-    `http://localhost:8000/leaderboards?limit=${limit}&leaderboardType=${leaderboardType}`,
+    `http://localhost:8000/leaderboards?limit=${limit}&rankedType=${rankedType}`,
     {
       method: "GET",
       headers: {

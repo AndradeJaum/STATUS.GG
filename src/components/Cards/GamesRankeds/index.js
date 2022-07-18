@@ -1,6 +1,6 @@
 import { Typography, Box } from "@mui/material";
 
-function Card({ queueStats, rankedType }) {
+function Card({ queueStats, rankedType, elo }) {
   return (
     <Box
       sx={{
@@ -33,7 +33,7 @@ function Card({ queueStats, rankedType }) {
         </Box>
         <Box>
           <Typography sx={{ marginTop: "0.7rem", marginBottom: "0.7rem", display: "block" }}>
-            Elo aqui
+            {elo.tier} {elo.rank}
           </Typography>
 
           <Typography sx={{ marginTop: "0.7rem", marginBottom: "0.7rem", display: "block" }}>
