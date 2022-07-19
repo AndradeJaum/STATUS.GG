@@ -15,6 +15,7 @@ export async function getMatchsByUserId(puuid) {
 export async function getMatch(id) {
   const response = await fetch(`http://localhost:8000/match/${id}`);
   const match = await response.json();
+  console.log(match)
   return match;
 }
 

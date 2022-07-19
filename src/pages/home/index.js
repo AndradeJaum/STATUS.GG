@@ -14,7 +14,7 @@ import {
   MenuItem,
   LinearProgress,
   Snackbar,
-  Alert
+  Alert,
 } from "@mui/material";
 import SimpleBackdrop from "../../components/Backdrop";
 import Games from "../../components/Cards/Games";
@@ -31,7 +31,7 @@ export function Home() {
   const [rankedFlex, setRankedFlex] = useState({});
   const [nickname, setNickname] = useState("");
   const [error, setError] = useState({ nickname: false });
-  const [apiError, setApiError] = useState(false)
+  const [apiError, setApiError] = useState(false);
   const [loader, setLoader] = useState(false);
 
   const [progress, setProgress, saveLocalStorage] = useCooldown();
@@ -40,15 +40,16 @@ export function Home() {
     try {
       const summoner = await searchByName(nickname, region);
       const matchsIds = await getMatchsByUserId(summoner.puuid);
-      setSummonerName(summoner.name);
-      setRankedSolo(summoner["RANKED_SOLO_5x5"])
-      setRankedFlex(summoner["RANKED_FLEX_SR"])
+      setRankedSolo(summoner["RANKED_SOLO_5x5"]);
+      setRankedFlex(summoner["RANKED_FLEX_SR"]);
 
       await postLeaderboards({
         summonerName: summoner.name,
         solo: summoner["RANKED_SOLO_5x5"],
         flex: summoner["RANKED_FLEX_SR"],
       });
+
+      setSummonerName(summoner.name);
 
       const games = {
         winrate: "",
@@ -61,8 +62,8 @@ export function Home() {
 
       await Promise.all(
         matchsIds.map(async (matchId) => {
-          let match = await getMatch(matchId);
-          const participants = match.info.participants;
+          const { matchDetail } = await getMatch(matchId);
+          const participants = matchDetail.info.participants;
           for (let i = 0; i < participants.length; i++) {
             if (participants[i].summonerName === summoner.name) {
               participants[i].win ? wins++ : loses++;
@@ -77,7 +78,7 @@ export function Home() {
     } catch (error) {
       resetStats();
       setLoader(false);
-      setApiError(true)
+      setApiError(true);
     }
   }
 
@@ -93,9 +94,6 @@ export function Home() {
     }
   }
 
-  console.log(rankedFlex)
-  console.log(rankedSolo)
-
   function resetStats() {
     setLast20Games({});
     setRankedSolo({});
@@ -103,7 +101,7 @@ export function Home() {
   }
 
   function handleSnackBar(event, reason) {
-    if (reason === 'clickaway') {
+    if (reason === "clickaway") {
       return;
     }
 
@@ -239,8 +237,16 @@ export function Home() {
         {last20Games.winrate && (
           <Box sx={{ display: "flex", justifyContent: "space-around" }}>
             <Games lastGames={last20Games} />
-            <Card queueStats={rankedSolo} rankedType="RANKED SOLO" elo={{ rank: rankedSolo.rank, tier: rankedSolo.tier }} />
-            <Card queueStats={rankedFlex} rankedType="RANKED FLEX" elo={{ rank: rankedFlex.rank, tier: rankedFlex.tier }} />
+            <Card
+              queueStats={rankedSolo}
+              rankedType="RANKED SOLO"
+              elo={{ rank: rankedSolo.rank, tier: rankedSolo.tier }}
+            />
+            <Card
+              queueStats={rankedFlex}
+              rankedType="RANKED FLEX"
+              elo={{ rank: rankedFlex.rank, tier: rankedFlex.tier }}
+            />
           </Box>
         )}
       </Box>
@@ -249,7 +255,7 @@ export function Home() {
         autoHideDuration={4000}
         onClose={handleSnackBar}
       >
-        <Alert onClose={handleSnackBar} severity="error" sx={{ width: '100%' }}>
+        <Alert onClose={handleSnackBar} severity="error" sx={{ width: "100%" }}>
           "Internal Error"
         </Alert>
       </Snackbar>
