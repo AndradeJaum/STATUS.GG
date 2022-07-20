@@ -45,6 +45,7 @@ export function Home() {
 
       await postLeaderboards({
         summonerName: summoner.name,
+        summonerId: summoner.id,
         solo: summoner["RANKED_SOLO_5x5"],
         flex: summoner["RANKED_FLEX_SR"],
       });
