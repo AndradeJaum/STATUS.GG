@@ -6,8 +6,9 @@ function Card({ queueStats, rankedType, elo }) {
       sx={{
         backgroundColor: "#fafafa",
         width: "20%",
-        marginTop: "1.5rem",
+        marginTop: "6rem",
         padding: "1rem",
+        borderRadius: "0.8rem"
       }}
     >
       <Typography variant="h6" color="secondary" component="h2" align="center">

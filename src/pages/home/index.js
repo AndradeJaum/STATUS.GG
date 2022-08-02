@@ -22,6 +22,8 @@ import Card from "../../components/Cards/GamesRankeds";
 import Leaderboards from "../../components/Cards/Leaderboards";
 import { regioes } from "../../enum";
 import { useCooldown } from "../../hooks/useCooldown";
+import background from "../../images/background.png";
+import { display } from "@mui/system";
 
 export function Home() {
   const [summonerName, setSummonerName] = useState("");
@@ -126,22 +128,40 @@ export function Home() {
 
   return (
     <>
-      <Box sx={{ backgroundColor: "#34495e", height: "100vh" }}>
+      <Box
+        sx={{
+          backgroundImage: `url(${background}) `,
+          backgroundPosition: "center center",
+          backgroundSize: "cover",
+          backgroundAttachment: "fixed",
+          width: "100%",
+          height: "100vh",
+        }}
+      >
         <Box
           sx={{
-            backgroundColor: "#233544",
-            marginBottom: "2rem",
-            padding: "2rem",
+            backgroundColor: "#3498db",
+            height: "10%",
+            display: "flex",
+            justifyContent: "center",
           }}
         >
-          <Typography
-            variant="h2"
-            color="primary"
-            component="h2"
-            align="center"
+          <Box
+            sx={{
+              display: "flex",
+              flexDirection: "column",
+              justifyContent: "center",
+            }}
           >
-            STATUS.GG
-          </Typography>
+            <Typography
+              variant="h2"
+              color="primary"
+              fontWeight={800}
+              align="center"
+            >
+              Status.GG
+            </Typography>
+          </Box>
         </Box>
 
         <SimpleBackdrop open={loader} />
@@ -151,12 +171,14 @@ export function Home() {
             width: "100vw",
             display: "flex",
             justifyContent: "space-between",
+            marginTop: "2.5rem",
           }}
         >
           <Box
             sx={{
-              width: "10%",
-              marginLeft: "20px",
+              width: "15%",
+              marginLeft: "2rem",
+              borderRadius: "0.8rem"
             }}
           ></Box>
 
@@ -165,15 +187,11 @@ export function Home() {
               backgroundColor: "#fafafa",
               width: "30%",
               padding: "1rem",
+              borderRadius: "0.8rem"
             }}
           >
-            <Typography
-              variant="h6"
-              color="secondary"
-              component="h2"
-              align="center"
-            >
-              INSIRA O NOME DE INVOCADOR!
+            <Typography variant="h6" color="secondary" align="center">
+              Insira o nome de Invocador!
             </Typography>
             <form autoComplete="off" onSubmit={handleSubmit}>
               <TextField
@@ -204,7 +222,7 @@ export function Home() {
                 value={region}
                 onChange={(event) => setRegions(event.target.value)}
                 variant="outlined"
-                color="secondary"
+                color="primary"
                 fullWidth
               >
                 {regioes.map((option) => (
@@ -233,7 +251,7 @@ export function Home() {
               )}
             </form>
           </Box>
-          <Leaderboards summoner={summonerName} />
+          <Leaderboards summoner={summonerName}/>
         </Box>
         {last20Games.winrate && (
           <Box sx={{ display: "flex", justifyContent: "space-around" }}>
