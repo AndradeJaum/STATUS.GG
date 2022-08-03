@@ -34,7 +34,6 @@ function Leaderboards({ summoner }) {
         width: "15%",
         padding: "1rem",
         textAlign: "center",
-        marginRight: "2rem",
         borderRadius: "0.8rem"
       }}
     >

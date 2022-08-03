@@ -163,6 +163,12 @@ export function Home() {
             </Typography>
           </Box>
         </Box>
+        <Box
+        sx={{
+          backgroundColor: "#233544",
+          height: "0.8%"
+        }}
+        ></Box>
 
         <SimpleBackdrop open={loader} />
 
@@ -170,14 +176,13 @@ export function Home() {
           sx={{
             width: "100vw",
             display: "flex",
-            justifyContent: "space-between",
+            justifyContent: "space-around",
             marginTop: "2.5rem",
           }}
         >
           <Box
             sx={{
               width: "15%",
-              marginLeft: "2rem",
               borderRadius: "0.8rem"
             }}
           ></Box>
