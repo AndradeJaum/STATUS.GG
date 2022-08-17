@@ -38,7 +38,7 @@ function Card({ queueStats, rankedType, elo }) {
           </Typography>
 
           <Typography sx={{ marginTop: "0.7rem", marginBottom: "0.7rem", display: "block" }}>
-            Campeões aqui
+            
           </Typography>
         </Box>
       </Box>
