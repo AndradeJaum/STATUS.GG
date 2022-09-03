@@ -6,6 +6,7 @@ import {
 } from "@mui/material";
 import { getLeaderboards } from "../../../lib/api";
 import { useState, useEffect } from "react";
+import theme from "../../../theme/theme.js";
 
 function Leaderboards({ summoner }) {
   const [leaderboards, setLeaderboards] = useState([]);
@@ -34,7 +35,19 @@ function Leaderboards({ summoner }) {
         width: "15%",
         padding: "1rem",
         textAlign: "center",
-        borderRadius: "0.8rem"
+        borderRadius: "0.8rem",
+        [theme.breakpoints.down("desktop")]: {
+          width: "20%",
+          fontSize: "1rem"
+        },
+        [theme.breakpoints.down("laptop")]: {
+          width: "50%",
+          marginTop:"2rem",
+          },
+        [theme.breakpoints.down("tablet")]: {
+          width: "60%",
+          marginTop:"2rem",
+        },
       }}
     >
       <Typography variant="h6" color="secondary" component="h2" align="center">

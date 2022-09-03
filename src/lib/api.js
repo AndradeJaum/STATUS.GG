@@ -15,19 +15,20 @@ export async function getMatchsByUserId(puuid) {
 export async function getMatch(id) {
   const response = await fetch(`http://54.87.81.27:8000/match/${id}`);
   const match = await response.json();
-  console.log(match)
   return match;
 }
 
 export async function getRankedMatchs(userId) {
-  const response = await fetch(`http://54.87.81.27:8000/rankedMatchs/${userId}`);
+  const response = await fetch(
+    `http://54.87.81.27:8000/rankedMatchs/${userId}`
+  );
   const rankedMatchs = await response.json();
 
   return rankedMatchs;
 }
 
 export async function postLeaderboards(body) {
-  await fetch(`http://54.87.81.27:8000/leaderboards`, {
+  await fetch(`http:// 54.87.81.27:8000/leaderboards`, {
     method: "POST",
     headers: {
       "Content-Type": "application/json",

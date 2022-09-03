@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import {
   searchByName,
   getMatchsByUserId,
@@ -23,7 +23,7 @@ import Leaderboards from "../../components/Cards/Leaderboards";
 import { regioes } from "../../enum";
 import { useCooldown } from "../../hooks/useCooldown";
 import background from "../../images/background.png";
-import { display } from "@mui/system";
+import theme from "../../theme/theme";
 
 export function Home() {
   const [summonerName, setSummonerName] = useState("");
@@ -62,6 +62,8 @@ export function Home() {
 
       let loses = 0;
       let wins = 0;
+
+      console.log(summoner);
 
       await Promise.all(
         matchsIds.map(async (matchId) => {
@@ -118,6 +120,7 @@ export function Home() {
     setProgress(100);
     saveLocalStorage();
     data();
+    executeScroll();
   };
 
   useEffect(() => {
@@ -125,6 +128,10 @@ export function Home() {
       setLoader(false);
     }
   }, [last20Games]);
+
+  const myRef = useRef(null);
+
+  const executeScroll = () => myRef.current.scrollIntoView();
 
   return (
     <>
@@ -135,15 +142,30 @@ export function Home() {
           backgroundSize: "cover",
           backgroundAttachment: "fixed",
           width: "100%",
-          height: "100vh",
+          minHeight: "96vh",
+          height: "auto",
+          [theme.breakpoints.down("desktop")]: {
+            minHeight: "100vh",
+            height: "100%",
+          },
+          [theme.breakpoints.down("laptop")]: {
+            paddingBottom: "2rem",
+          },
+          [theme.breakpoints.down("tablet")]: {
+            minHeight: "100vh",
+            height: "auto",
+          },
         }}
       >
         <Box
           sx={{
             backgroundColor: "#3498db",
-            height: "10%",
+            height: "7%",
             display: "flex",
             justifyContent: "center",
+            [theme.breakpoints.down("desktop")]: {
+              height: "12%",
+            },
           }}
         >
           <Box
@@ -158,41 +180,49 @@ export function Home() {
               color="primary"
               fontWeight={800}
               align="center"
+              sx={{
+                [theme.breakpoints.down("desktop")]: {
+                  fontSize: "2.9rem",
+                },
+                [theme.breakpoints.down("tablet")]: {
+                  fontSize: "3.1rem",
+                },
+              }}
             >
               Status.GG
             </Typography>
           </Box>
         </Box>
-        <Box
-        sx={{
-          backgroundColor: "#233544",
-          height: "0.8%"
-        }}
-        ></Box>
 
         <SimpleBackdrop open={loader} />
 
         <Box
           sx={{
             width: "100vw",
-            display: "flex",
             justifyContent: "space-around",
-            marginTop: "2.5rem",
+            marginTop: "2rem",
+            display: "flex",
+            [theme.breakpoints.down("laptop")]: {
+              flexWrap: "wrap",
+            },
+            [theme.breakpoints.down("tablet")]: {
+              flexWrap: "wrap",
+            },
           }}
         >
           <Box
             sx={{
-              width: "15%",
-              borderRadius: "0.8rem"
-            }}
-          ></Box>
-
-          <Box
-            sx={{
               backgroundColor: "#fafafa",
-              width: "30%",
+              width: "40%",
               padding: "1rem",
-              borderRadius: "0.8rem"
+              borderRadius: "0.8rem",
+              [theme.breakpoints.down("laptop")]: {
+                width: "65%",
+                flexWrap: "wrap",
+              },
+              [theme.breakpoints.down("tablet")]: {
+                width: "80%",
+              },
             }}
           >
             <Typography variant="h6" color="secondary" align="center">
@@ -203,7 +233,7 @@ export function Home() {
                 onChange={(event) => setNickname(event.target.value)}
                 sx={{
                   marginTop: "1.5rem",
-                  marginBottom: "1.5rem",
+                  marginBottom: "1rem",
                   display: "block",
                 }}
                 name="nickname"
@@ -220,9 +250,8 @@ export function Home() {
               <Select
                 label="Região"
                 sx={{
-                  marginTop: "1.5rem",
+                  marginTop: "1rem",
                   marginBottom: "1.5rem",
-                  display: "block",
                 }}
                 value={region}
                 onChange={(event) => setRegions(event.target.value)}
@@ -256,10 +285,22 @@ export function Home() {
               )}
             </form>
           </Box>
-          <Leaderboards summoner={summonerName}/>
+          <Leaderboards summoner={summonerName} />
         </Box>
         {last20Games.winrate && (
-          <Box sx={{ display: "flex", justifyContent: "space-around" }}>
+          <Box
+            sx={{
+              display: "flex",
+              justifyContent: "space-around",
+              [theme.breakpoints.down("laptop")]: {
+                flexWrap: "wrap",
+              },
+              [theme.breakpoints.down("tablet")]: {
+                flexWrap: "wrap",
+              },
+            }}
+          >
+            {/* <div ref={myRef}></div> */}
             <Games lastGames={last20Games} />
             <Card
               queueStats={rankedSolo}
@@ -273,6 +314,23 @@ export function Home() {
             />
           </Box>
         )}
+      </Box>
+      <Box
+        sx={{
+          backgroundColor: "#3498db",
+          height: "4vh",
+          display: "flex",
+          flexDirection: "column",
+          justifyContent: "center",
+        }}
+      >
+        <Box
+          sx={{
+            textAlign: "center",
+          }}
+        >
+          &copy; Desenvolvido por AndradeJaum
+        </Box>
       </Box>
       <Snackbar
         open={apiError}

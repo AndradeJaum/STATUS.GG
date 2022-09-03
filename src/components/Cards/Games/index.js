@@ -1,4 +1,5 @@
 import { Typography, Box } from "@mui/material";
+import theme from "../../../theme/theme.js";
 
 function Games({ lastGames }) {
 
@@ -9,7 +10,15 @@ function Games({ lastGames }) {
         width: "20%",
         marginTop: "6rem",
         padding: "1rem",
-        borderRadius: "0.8rem"
+        borderRadius: "0.8rem",
+        [theme.breakpoints.down("laptop")]: {
+          marginTop: "2rem",
+          width: "30%"
+          },
+        [theme.breakpoints.down("tablet")]: {
+          width: "60%",
+          marginTop: "2rem",
+        },
       }}
     >
       <Typography variant="h6" color="secondary" component="h2" align="center">
